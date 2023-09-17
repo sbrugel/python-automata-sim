@@ -1,0 +1,82 @@
+FSM Data:
+        Alphabet: a, b
+        States:
+                State Name: q0  Accepting? False
+                State Name: q1  Accepting? True
+        Starting State:
+                State Name: q0  Accepting? False
+        Transitions:
+                Transition with letter b from q0 to q1
+                Transition with letter a from q1 to q1
+                Transition with letter a from q0 to q1
+                Transition with letter b from q1 to q0
+The string EMPTY STRING is NOT in the language
+
+The string a is in the language
+        (a q0-q1)
+The string b is in the language
+        (b q0-q1)
+The string aa is in the language
+        (a q0-q1), (a q1-q1)
+The string bb is NOT in the language
+        (b q0-q1), (b q1-q0)
+The string ab is NOT in the language
+        (a q0-q1), (b q1-q0)
+The string ba is in the language
+        (b q0-q1), (a q1-q1)
+The string aba is in the language
+        (a q0-q1), (b q1-q0), (a q0-q1)
+The string bab is NOT in the language
+        (b q0-q1), (a q1-q1), (b q1-q0)
+The string abb is in the language
+        (a q0-q1), (b q1-q0), (b q0-q1)
+The string baa is in the language
+        (b q0-q1), (a q1-q1), (a q1-q1)
+The string aab is NOT in the language
+        (a q0-q1), (a q1-q1), (b q1-q0)
+The string bba is in the language
+        (b q0-q1), (b q1-q0), (a q0-q1)
+The string aaa is in the language
+        (a q0-q1), (a q1-q1), (a q1-q1)
+The string bbb is in the language
+        (b q0-q1), (b q1-q0), (b q0-q1)
+The string aaaa is in the language
+        (a q0-q1), (a q1-q1), (a q1-q1), (a q1-q1)
+The string bbbb is NOT in the language
+        (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0)
+The string abab is NOT in the language
+        (a q0-q1), (b q1-q0), (a q0-q1), (b q1-q0)
+The string aaab is NOT in the language
+        (a q0-q1), (a q1-q1), (a q1-q1), (b q1-q0)
+The string abbb is NOT in the language
+        (a q0-q1), (b q1-q0), (b q0-q1), (b q1-q0)
+The string abba is in the language
+        (a q0-q1), (b q1-q0), (b q0-q1), (a q1-q1)
+The string baba is in the language
+        (b q0-q1), (a q1-q1), (b q1-q0), (a q0-q1)
+The string baaa is in the language
+        (b q0-q1), (a q1-q1), (a q1-q1), (a q1-q1)
+The string bbba is in the language
+        (b q0-q1), (b q1-q0), (b q0-q1), (a q1-q1)
+The string baab is NOT in the language
+        (b q0-q1), (a q1-q1), (a q1-q1), (b q1-q0)
+The string ababbbaaabba is in the language
+        (a q0-q1), (b q1-q0), (a q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (a q0-q1), (a q1-q1), (a q1-q1), (b q1-q0), (b q0-q1), (a q1-q1)
+The string ababbbaaabbb is NOT in the language
+        (a q0-q1), (b q1-q0), (a q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (a q0-q1), (a q1-q1), (a q1-q1), (b q1-q0), (b q0-q1), (b q1-q0)
+The string abaaaabbbaaa is in the language
+        (a q0-q1), (b q1-q0), (a q0-q1), (a q1-q1), (a q1-q1), (a q1-q1), (b q1-q0), (b q0-q1), (b q1-q0), (a q0-q1), (a q1-q1), (a q1-q1)
+The string abaaaabbbaab is NOT in the language
+        (a q0-q1), (b q1-q0), (a q0-q1), (a q1-q1), (a q1-q1), (a q1-q1), (b q1-q0), (b q0-q1), (b q1-q0), (a q0-q1), (a q1-q1), (b q1-q0)
+The string abbbbbbbbbbb is NOT in the language
+        (a q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0)
+The string aabbbbbbbbbb is in the language
+        (a q0-q1), (a q1-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1)
+The string bbaaaaaaaaaa is in the language
+        (b q0-q1), (b q1-q0), (a q0-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1)
+The string baaaaaaaaaaa is in the language
+        (b q0-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1)
+The string bbaaaaaaaaab is NOT in the language
+        (b q0-q1), (b q1-q0), (a q0-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (a q1-q1), (b q1-q0)
+The string abbbbbbbbbba is in the language
+        (a q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (b q1-q0), (b q0-q1), (a q1-q1)
