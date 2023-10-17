@@ -1,4 +1,56 @@
-import os, sys
+import copy, os, sys
+
+STR_TEST_CASES = [
+    "", # empty string
+    "a", # single chars
+    "b",
+    "aa", # pairs of chars
+    "bb",
+    "ab",
+    "ba",
+    "aba", # trios of chars
+    "bab",
+    "abb",
+    "baa",
+    "aab",
+    "bba",
+    "aaa",
+    "bbb",
+    "aaaa", # 4 chars
+    "bbbb",
+    "abab",
+    "aaab",
+    "abbb",
+    "abba",
+    "baba",
+    "baaa",
+    "bbba",
+    "baab",
+    "aabb",
+    "bbaa",
+    "ababbbaaabba", # long strings of even len
+    "ababbbaaabbb",
+    "abaaaabbbaaa",
+    "abaaaabbbaab",
+    "abbbbbbbbbbb",
+    "aabbbbbbbbbb",
+    "bbaaaaaaaaaa",
+    "baaaaaaaaaaa",
+    "bbaaaaaaaaab",
+    "abbbbbbbbbba",
+    "ababbbaaaba", # long strings of odd len
+    "ababbbaaabb",
+    "abaaaabbbaa",
+    "abaaaabbbab",
+    "abbbbbbbbbb",
+    "aabbbbbbbbb",
+    "bbaaaaaaaaa",
+    "baaaaaaaaaa",
+    "bbaaaaaaaab",
+    "abbbbbbbbba",
+    "aababb", # other random stuff
+    "bbabaa"
+]
 
 class State:
     def __init__(self, name: str, accepting: bool) -> None:
@@ -38,11 +90,13 @@ class FSM:
     This returns the transition with the given letter and start state. If it doesn't exist, it returns None.
     """
     def find_transition(self, letter: str, start: State) -> Transition:
+        transitions = []
         for trans in self.transitions:
             if trans.letter == letter and trans.start == start:
-                return trans
+                transitions.append(trans)
             
-        return None
+        if len(transitions) == 0: return None
+        else: return transitions
 
     def __str__(self) -> str:
         ret_str = 'FSM Data:'
@@ -74,6 +128,31 @@ def find_state_by_id(states: [State], id: int) -> State:
             return state
     
     return None
+
+"""
+Traverses the machine from this state with the given string, start state, and path so far.
+    fsm: The FSM
+    testing_str: The string remaining
+    start_state: The state this simulation starts at
+    current_path: The states travelled to so far
+Returns true if it ends in accept state, false if not, as well as the final path traversed.
+"""
+def start_simulation(fsm: FSM, testing_str: str, start_state: State, current_path: list) -> bool:
+    state_pointer = start_state # where are we at in the FSM?
+    path = copy.deepcopy(current_path) # list of tuples showing where the simulation went
+    while not testing_string == '':
+        current_char = testing_string[0]
+        valid_transitions = fsm.find_transition(current_char, state_pointer)
+        if len(valid_transitions) == 1:
+            path.append((current_char, state_pointer.name, valid_transitions[0].end.name))
+            state_pointer = valid_transitions[0].end # move to the next state
+            testing_string = testing_string[1:] # remove first char
+        elif len(valid_transitions) == 0:
+            return (False, path)
+        else:
+            pass
+
+    return (False, [])
 
 def main():
     os_agnostic_clear()
@@ -130,25 +209,25 @@ def main():
         for trans in fsm.transitions:
             print('\t' + str(trans))
         print('State IDs range from 0 to', max_state_id)
-        trans = input('Enter a transition in this format: \'LETTER, FROM_STATE_ID, TO_STATE_ID\'. Enter nothing to stop: ').strip().replace(' ', '').split(',')
+        trans = input('Enter a transition in this format: \'LETTER (or \'EP\' for epsilon), FROM_STATE_ID, TO_STATE_ID\'. Enter nothing to stop: ').strip().replace(' ', '').split(',')
 
-        if len(trans) == 1 and trans[0] == '' and not len(fsm.transitions) == 0:
-            if not fsm.states_have_all_transitions(): # only reached when trying to submit
-                os_agnostic_clear()
-                print('ERROR: Not all states have transitions for every letter! Clearing transitions...')
-                fsm.transitions = []
-                continue
+        if len(trans) == 1 and trans[0] == '' and not len(fsm.transitions) == 0: # submitting
+            # if not fsm.states_have_all_transitions(): # only reached when trying to submit
+            #     os_agnostic_clear()
+            #     print('ERROR: Not all states have transitions for every letter! Clearing transitions...')
+            #     fsm.transitions = []
+            #     continue
 
             # clear duplicate transitions
             fsm.transitions = list(set(fsm.transitions))
             break
 
-        if not len(trans) == 3: # 
+        if not len(trans) == 3: # incomplete transition
             os_agnostic_clear()
             print('ERROR: Submit 3 items for each transition')
             continue
 
-        valid_letter = trans[0] in fsm.alphabet
+        valid_letter = trans[0] in fsm.alphabet or trans[0] == 'EP'
         valid_from = 0 <= int(trans[1]) <= max_state_id
         valid_to = 0 <= int(trans[2]) <= max_state_id
         if not valid_letter or not valid_from or not valid_to:
@@ -156,10 +235,10 @@ def main():
             print('ERROR: One of your inputs was invalid (i.e. letter not in alphabet, invalid state ID)')
             continue
 
-        if fsm.find_transition(trans[0], find_state_by_id(fsm.states, int(trans[1]))):
-            os_agnostic_clear()
-            print('ERROR: A transition for this start state with this letter already exists and was not added')
-            continue
+        # if fsm.find_transition(trans[0], find_state_by_id(fsm.states, int(trans[1]))):
+        #     os_agnostic_clear()
+        #     print('ERROR: A transition for this start state with this letter already exists and was not added')
+        #     continue
 
         new_trans = Transition(trans[0], find_state_by_id(fsm.states, int(trans[1])), find_state_by_id(fsm.states, int(trans[2])))
         fsm.transitions.append(new_trans)
@@ -168,67 +247,13 @@ def main():
     os_agnostic_clear()
     print(fsm)
 
-    str_test_cases = [
-        "", # empty string
-        "a", # single chars
-        "b",
-        "aa", # pairs of chars
-        "bb",
-        "ab",
-        "ba",
-        "aba", # trios of chars
-        "bab",
-        "abb",
-        "baa",
-        "aab",
-        "bba",
-        "aaa",
-        "bbb",
-        "aaaa", # 4 chars
-        "bbbb",
-        "abab",
-        "aaab",
-        "abbb",
-        "abba",
-        "baba",
-        "baaa",
-        "bbba",
-        "baab",
-        "aabb",
-        "bbaa",
-        "ababbbaaabba", # long strings of even len
-        "ababbbaaabbb",
-        "abaaaabbbaaa",
-        "abaaaabbbaab",
-        "abbbbbbbbbbb",
-        "aabbbbbbbbbb",
-        "bbaaaaaaaaaa",
-        "baaaaaaaaaaa",
-        "bbaaaaaaaaab",
-        "abbbbbbbbbba",
-        "ababbbaaaba", # long strings of odd len
-        "ababbbaaabb",
-        "abaaaabbbaa",
-        "abaaaabbbab",
-        "abbbbbbbbbb",
-        "aabbbbbbbbb",
-        "bbaaaaaaaaa",
-        "baaaaaaaaaa",
-        "bbaaaaaaaab",
-        "abbbbbbbbba",
-        "aababb", # other random stuff
-        "bbabaa"
-    ]
+    for testing_string in STR_TEST_CASES:
+        if start_simulation(fsm, testing_string, fsm.start_state, [])[0]:
+            print('\033[92mThe string', (orig_str if not orig_str == '' else 'EMPTY STRING'), 'is in the language\033[0m')
+        else:
+            print('\033[91mThe string', (orig_str if not orig_str == '' else 'EMPTY STRING'), 'is NOT in the language\033[0m')
 
-    for testing_string in str_test_cases:
         orig_str = testing_string # for printing purposes
-        state_pointer = fsm.start_state # where are we at in the FSM?
-        path = [] # list of tuples showing where the simulation went
-        while not testing_string == '':
-            current_char = testing_string[0]
-            path.append((current_char, state_pointer.name, fsm.find_transition(current_char, state_pointer).end.name))
-            state_pointer = fsm.find_transition(current_char, state_pointer).end # move to the next state
-            testing_string = testing_string[1:] # remove first char
 
         if state_pointer.accepting:
             print('\033[92mThe string', (orig_str if not orig_str == '' else 'EMPTY STRING'), 'is in the language\033[0m')
